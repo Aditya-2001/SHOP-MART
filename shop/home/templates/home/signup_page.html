@@ -19,6 +19,7 @@
                 <input type="email" class="form-control" name="email" id="email">
                 </div>
                 <button type="submit" class="btn btn-success">Send OTP</button>
+                <a href="#" style="float: right;">Already have an account? Login</a>
             </form>
         {% endif %}
 
@@ -30,9 +31,13 @@
                 </div>
                 <div class="mb-3">
                     <label for="otp" class="form-label">Enter the OTP</label>
-                    <input type="text" class="form-control" id="otp" name="otp">
+                    <input type="text" class="form-control" id="otp" name="otp" aria-describedby="otp">
+                    <div id="otp" class="form-text">
+                        Expires in 10 minutes.
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-success">Verify OTP</button>
+                <a href="#" style="float: right;">Resend OTP</a>
             </form>
         {% endif %}
 
