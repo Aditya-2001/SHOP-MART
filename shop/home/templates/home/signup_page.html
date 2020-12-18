@@ -18,7 +18,12 @@
                 {% csrf_token %}
                 <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" name="email" id="email" required>
+                <input type="email" class="form-control" name="email" id="email" required aria-describedby="idd">
+                {% if email_matched %}
+                <div id="idd" class="form-text">
+                  This email is already registered, try another email.
+                </div>
+                {% endif %}
                 </div>
                 <button type="submit" class="btn btn-success">Send OTP</button>
                 <a href="#" style="float: right;" data-bs-toggle="modal" data-bs-target="#loginform">Already have an account? Login</a>
@@ -95,8 +100,8 @@
                 {% if prev %}
                   <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="username" name="username" value="prev_username" required aria-describedby="user">
-                  {% if email_matched %}
+                  <input type="text" class="form-control" id="username" name="username" value={{prev_username}} required aria-describedby="user">
+                  {% if username_matched %}
                   <div id="user" class="form-text">
                     This username already exists, try a new one.
                   </div>
@@ -105,18 +110,13 @@
                   <div class="mb-3">
                   <label for="email" class="form-label">Email address</label>
                   <input type="email" class="form-control" id="email" name="email" value={{email}} readonly aria-describedby="emailid">
-                  {% if username_matched %}
-                  <div id="emailid" class="form-text">
-                    This email already exists, so please go back to signup page and register with a new email id.
-                  </div>
-                  {% endif %}
                   </div>
                   <div class="mb-3">
                   <label for="firstname" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstname" name="first_name" value="prev_first_name" required>
+                  <input type="text" class="form-control" id="firstname" name="first_name" value={{prev_first_name}} required>
       
                   <label for="lastname" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastname" name="last_name" value="prev_last_name" required>
+                  <input type="text" class="form-control" id="lastname" name="last_name" value={{prev_last_name}} required>
                   </div>
                 {% else %}
                   <div class="mb-3">
