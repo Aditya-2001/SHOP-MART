@@ -25,42 +25,9 @@
                 </div>
                 {% endif %}
                 </div>
-                <button type="submit" class="btn btn-success">Send OTP</button>
-                <a href="#" style="float: right;" data-bs-toggle="modal" data-bs-target="#loginform">Already have an account? Login</a>
+                <button type="submit" class="btn btn-success">Send OTP</button>           
             </form>
-
-            <div class="modal fade" id="loginform" tabindex="-1" aria-labelledby="LoginLable" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="LoginLable">Login</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form>
-                        <div class="mb-3">
-                          <label for="UserEmail" class="form-label">Username or Email address</label>
-                          <input type="email" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp">
-                          <div id="emailHelp" class="form-text">We'll never share your username/email with anyone else.</div>
-                        </div>
-                        <div class="mb-3">
-                          <label for="password" class="form-label">Password</label>
-                          <input type="password" class="form-control" name="password" id="password">
-                        </div>
-                        <div class="mb-3 form-check">
-                          <input type="checkbox" class="form-check-input" id="check">
-                          <label class="form-check-label" for="check">Check me out</label>
-                        </div>
-                        <button type="submit" class="btn btn-success">Login</button>
-                        <a class="nav-link" style="float: right;" href="{% url 'signup_page' %}">Create account</a>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <a href="{% url 'login_page' %}" style="text-align:center;display:block;">Already have an account? Login</a>
         {% endif %}
 
         {% if otp_verification %}

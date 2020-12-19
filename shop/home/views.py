@@ -105,3 +105,44 @@ def signupdetails(request):
                 return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": False, "signup_details": True, "email": email, "prev": True, "prev_username": username, "prev_first_name": first_name, "prev_last_name": last_name, "password_error": True, "error": form.errors})
     else:
         return redirect('signup_page')
+
+def logout_request(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('home')
+
+def login_page(request):
+    return render(request,"home/login_page.html",context={"standard_message": True})
+ 
+def login_request(request):
+    if request.method=="POST":
+        useremail=request.POST.get('UserEmail')
+        password=request.POST.get('password')
+        try:
+            checker = User.objects.get(username=useremail)
+            user = authenticate(request, username=useremail, password=password)
+            if user is not None:
+                login(request, user)
+                login_email(user.email)
+                return redirect('home')
+            else:
+                return render(request,"home/login_page.html",context={"useremail": useremail, "Incorrect_Password": True})
+        except:
+            try:
+                checker = User.objects.get(email=useremail)
+                user = authenticate(request, email=useremail, password=password)
+                if user is not None:
+                    login(request, user)
+                    login_email(user.email)
+                    return redirect('home')
+                else:
+                    return render(request,"home/login_page.html",context={"useremail": useremail, "Incorrect_Password": True})
+            except:
+                return render(request,"home/login_page.html",context={"Invalid_user_email": True})
+    else:
+        return HttpResponse("400 ERROR: Request Rejected to this url")
+
+def login_email(email):
+    subject = 'Successful Login in AIYAGRAMART'
+    message = f'Hi user, thank you for logging in AIYAGRAMART.\nThanks'
+    SendMail(subject,message,email)

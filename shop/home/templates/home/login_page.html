@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>Login Page</title>
+    <link href="{% static 'css/buttonlikelink.css' %}" rel="stylesheet">    
+</head>
+<body>
+    <br><br>
+    <div class="container" style="background-color: rgba(112, 255, 219, 0.062);">
+        <br>
+        <h4 style="text-align: center;"><a href="{% url 'home' %}" style="color: black;">AIYAGRAMART </a>|<u> Login to buy exciting products</u></h4>
+        <form action="{% url 'login_request' %}" method="POST">
+            {% csrf_token %}
+            {% if standard_message %}
+            <div class="mb-3">
+              <label for="UserEmail" class="form-label">Username or Email address</label>
+              <input type="text" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp" required>
+              <div id="emailHelp" class="form-text">We'll never share your username/email with anyone else.</div>
+            </div>
+            {% endif %}
+            {% if Incorrect_Password %}
+            <div class="mb-3">
+              <label for="UserEmail" class="form-label">Username or Email address</label>
+              <input type="text" class="form-control" id="UserEmail" name="UserEmail" value={{useremail}} aria-describedby="emailHelp" required>
+              <div id="emailHelp" class="form-text">We'll never share your username/email with anyone else.</div>
+            </div>
+            {% endif %}
+            {% if Invalid_user_email %}
+            <div class="mb-3">
+              <label for="UserEmail" class="form-label">Username or Email address</label>
+              <input type="text" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp" required>
+              <div id="emailHelp" class="form-text">You have entered a wrong username/email</div>
+            </div>
+            {% endif %}
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" name="password" id="password" aria-describedby="passwordHelp" required>
+              {% if Incorrect_Password %}
+              <div id="passwordHelp" class="form-text">You have entered wrong Password</div>
+              {% endif %}
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="check">
+              <label class="form-check-label" for="check">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-success">Login</button>
+            <a class="nav-link" style="float: right;" href="#">Forgot Password?</a>
+          </form>
+          <a href="{% url 'signup_page' %}" style="text-align:center;display:block;">New to AIYAGRAMART? Create a new account</a>
+        <br>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+</html>
