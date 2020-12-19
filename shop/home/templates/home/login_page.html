@@ -18,7 +18,7 @@
             {% if standard_message %}
             <div class="mb-3">
               <label for="UserEmail" class="form-label">Username or Email address</label>
-              <input type="text" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp" required>
+              <input type="text" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp" placeholder="Enter username or email" required>
               <div id="emailHelp" class="form-text">We'll never share your username/email with anyone else.</div>
             </div>
             {% endif %}
@@ -32,27 +32,26 @@
             {% if Invalid_user_email %}
             <div class="mb-3">
               <label for="UserEmail" class="form-label">Username or Email address</label>
-              <input type="text" class="form-control" id="UserEmail" name="UserEmail" aria-describedby="emailHelp" required>
+              <input type="text" class="form-control" id="UserEmail" name="UserEmail" placeholder="Enter username or email" aria-describedby="emailHelp" required>
               <div id="emailHelp" class="form-text">You have entered a wrong username/email</div>
             </div>
             {% endif %}
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" id="password" aria-describedby="passwordHelp" required>
+              <input type="password" class="form-control" name="password" id="password" aria-describedby="passwordHelp" placeholder="Enter your password" required>
               {% if Incorrect_Password %}
               <div id="passwordHelp" class="form-text">You have entered wrong Password</div>
               {% endif %}
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="check">
-              <label class="form-check-label" for="check">Check me out</label>
+              <br>
+              <input type="checkbox" onclick="ShowPassword('password')">  Show Password
             </div>
             <button type="submit" class="btn btn-success">Login</button>
-            <a class="nav-link" style="float: right;" href="#">Forgot Password?</a>
+            <a class="nav-link" style="float: right;" href="{% url 'forgot_password_page' %}">Forgot Password?</a>
           </form>
-          <a href="{% url 'signup_page' %}" style="text-align:center;display:block;">New to AIYAGRAMART? Create a new account</a>
+          <a href="{% url 'signup_page' %}" style="text-align:center;display:block;">New to AIYAGRAMART? Create account</a>
         <br>
     </div>
+    <script src="{% static 'js/password.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>

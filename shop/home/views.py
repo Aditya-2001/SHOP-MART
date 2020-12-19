@@ -18,14 +18,26 @@ def signup_page(request):
 def emailverification(request):
     if request.method=="POST":
         email=request.POST.get('email')
-        try:
-            user=User.objects.get(email=email)
-            return render(request,"home/signup_page.html",context={"email_verification": True, "otp_verification": False, "signup_details": False, "email_matched": True})
-        except:
-            pass
+        TYPE=str(request.POST.get('type'))
+        print(TYPE)
+        if TYPE=="1":
+            try:
+                user=User.objects.get(email=email)
+                return render(request,"home/signup_page.html",context={"email_verification": True, "otp_verification": False, "signup_details": False, "email_matched": True})
+            except:
+                pass
+        else:
+            try:
+                user=User.objects.get(email=email)
+            except:
+                return render(request,"home/forgot_password_page.html",context={"email_verification": True, "otp_verification": False, "reser_password": False, "email_does_not_exist": True})
         otp=generateOTP()
-        subject = 'OTP for email verification in AIYAGRAMART'
-        message = f'Hi user, thank you for creating account is ' + str(otp) + ', do not share it with anyone.\nThanks'
+        if TYPE=="1":
+            subject = 'OTP for email verification in AIYAGRAMART'
+            message = f'Hi user, thank you for creating account, your otp is ' + str(otp) + ', do not share it with anyone.\nThanks'
+        else:
+            subject = 'OTP for reseting the password in AIYAGRAMART'
+            message = f'Hi user, otp to reset the password is ' + str(otp) + ', do not share it with anyone.\nThanks'
         SendMail(subject,message,email)
         try:
             user=OTP.objects.get(email=email)
@@ -34,10 +46,12 @@ def emailverification(request):
             user.save()
         except:
             OTP.objects.create(email=email, otp=otp, date=datetime.datetime.now)
-        return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email})
-        
+        if TYPE=='1':
+            return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email})
+        else:
+            return render(request,"home/forgot_password_page.html",context={"email_verification": False, "otp_verification": True, "reset_password": False, "email": email})
     else:
-        return redirect('signup_page')
+        return redirect('home')
 
 def generateOTP() : 
     digits = "0123456789"
@@ -55,6 +69,7 @@ def otpverification(request):
     if request.method=="POST":
         email=request.POST.get('email')
         otp=str(request.POST.get('otp'))
+        TYPE=str(request.POST.get('type'))
         user=OTP.objects.get(email=email)
         if str(user.otp)==otp:
             prev_date=user.date
@@ -68,17 +83,27 @@ def otpverification(request):
             minutes = total_seconds/60
             if(minutes>15):
                 otp=generateOTP()
-                subject = 'OTP for email verification in AIYAGRAMART'
-                message = f'Hi user, thank you for creating account is ' + str(otp) + ', do not share it with anyone.\nThanks'
+                if TYPE=="1":
+                    subject = 'OTP for email verification in AIYAGRAMART'
+                    message = f'Hi user, thank you for creating account is ' + str(otp) + ', do not share it with anyone.\nThanks'
+                else:
+                    subject = 'OTP for reseting the password in AIYAGRAMART'
+                    message = f'Hi user, otp to reset the password is ' + str(otp) + ', do not share it with anyone.\nThanks'
                 SendMail(subject,message,email)
                 user.otp=otp=otp
                 user.date=datetime.datetime.now()
                 user.save()
-                return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email, "time_exceeded": True})
+                if TYPE=="1":
+                    return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email, "time_exceeded": True})
+                return render(request,"home/forgot_password_page.html",context={"email_verification": False, "otp_verification": True, "reset_password": False, "email": email, "time_exceeded": True})
             else:
-                return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": False, "signup_details": True, "email": email})
+                if TYPE=="1":
+                    return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": False, "signup_details": True, "email": email})
+                return render(request,"home/forgot_password_page.html",context={"email_verification": False, "otp_verification": False, "reset_password": True, "email": email})
         else:
-            return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email, "wrong_otp": True})
+            if TYPE=="1":
+                return render(request,"home/signup_page.html",context={"email_verification": False, "otp_verification": True, "signup_details": False, "email": email, "wrong_otp": True})
+            return render(request,"home/forgot_password_page.html",context={"email_verification": False, "otp_verification": True, "reset_password": False, "email": email, "wrong_otp": True})
         
     else:
         return redirect('signup_page')
@@ -130,7 +155,7 @@ def login_request(request):
         except:
             try:
                 checker = User.objects.get(email=useremail)
-                user = authenticate(request, email=useremail, password=password)
+                user = authenticate(request, username=checker.username, password=password)
                 if user is not None:
                     login(request, user)
                     login_email(user.email)
@@ -146,3 +171,20 @@ def login_email(email):
     subject = 'Successful Login in AIYAGRAMART'
     message = f'Hi user, thank you for logging in AIYAGRAMART.\nThanks'
     SendMail(subject,message,email)
+
+def forgot_password_page(request):
+    return render(request,"home/forgot_password_page.html",context={"email_verification": True, "otp_verification": False, "reset_password": False})
+
+def reset_password(request):
+    if request.method=="POST":
+        email=request.POST.get("email")
+        password=request.POST.get("password2")
+        user=User.objects.get(email=email)
+        user.set_password(password)
+        user.save()
+        subject = 'Password changed in AIYAGRAMART'
+        message = f'Hi user, password has been successfully changed.\nThanks'
+        SendMail(subject,message,email)
+        return redirect('home')
+    else:
+        return redirect('forgot_password_page')
